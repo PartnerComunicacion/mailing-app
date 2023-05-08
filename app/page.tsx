@@ -1,39 +1,74 @@
-import Link from "next/link"
+"use client"
 
-import { siteConfig } from "@/config/site"
-import { buttonVariants } from "@/components/ui/button"
+import { useCallback, useMemo, useRef, useState } from "react"
 
-export default function IndexPage() {
+import { footers, headers, rows } from "@/lib/templates"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+interface FormRef {
+  country: HTMLSpanElement | null
+}
+
+interface Props {}
+
+interface State {
+  selectedCountry: string
+}
+
+export default function Page(props: Props) {
+  const formRef = useRef<FormRef>({
+    country: null,
+  })
+
+  const [selectedCountry, setSelectedCountry] =
+    useState<State["selectedCountry"]>("")
+
+  const handleSelectChange = useCallback(() => {
+    const value = formRef.current.country?.innerText
+    setSelectedCountry(value || "")
+  }, [])
+
+  const generatedTemplate = useMemo(() => {
+    const template =
+      selectedCountry === "Brasil."
+        ? headers.brasil + rows.even + footers.brasil
+        : selectedCountry === "Perú."
+        ? headers.peru + rows.even + footers.peru
+        : selectedCountry === "Colombia."
+        ? headers.colombia + rows.even + footers.colombia
+        : ""
+
+    return template
+  }, [selectedCountry])
+
   return (
-    <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-      <div className="flex max-w-[980px] flex-col items-start gap-2">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl md:text-5xl lg:text-6xl">
-          Beautifully designed components <br className="hidden sm:inline" />
-          built with Radix UI and Tailwind CSS.
-        </h1>
-        <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
-          Accessible and customizable components that you can copy and paste
-          into your apps. Free. Open Source. And Next.js 13 Ready.
-        </p>
+    <main className="container grid 2xl:grid-cols-2 items-center gap-6 pb-8 pt-6 md:py-10">
+      <div className="sm:w-[350px] mx-auto">
+        <Select onValueChange={handleSelectChange}>
+          <SelectTrigger>
+            <SelectValue
+              id="country"
+              ref={(el) => (formRef.current.country = el as HTMLSpanElement)}
+              placeholder="País del mailing"
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="brasil">Brasil.</SelectItem>
+              <SelectItem value="peru">Perú.</SelectItem>
+              <SelectItem value="colombia">Colombia.</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
-      <div className="flex gap-4">
-        <Link
-          href={siteConfig.links.docs}
-          target="_blank"
-          rel="noreferrer"
-          className={buttonVariants({ size: "lg" })}
-        >
-          Documentation
-        </Link>
-        <Link
-          target="_blank"
-          rel="noreferrer"
-          href={siteConfig.links.github}
-          className={buttonVariants({ variant: "outline", size: "lg" })}
-        >
-          GitHub
-        </Link>
-      </div>
-    </section>
+      <div dangerouslySetInnerHTML={{ __html: generatedTemplate }} />
+    </main>
   )
 }
