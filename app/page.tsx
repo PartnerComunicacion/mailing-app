@@ -1,8 +1,11 @@
-"use client"
+"use client";
 
-import { useCallback, useMemo, useRef, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react";
+
+
 
 import { footers, headers, rows } from "@/lib/templates"
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -48,9 +51,20 @@ export default function Page(props: Props) {
     return template
   }, [selectedCountry])
 
+  const downloadTemplate = () => {
+    const template = generatedTemplate
+    const element = document.createElement("a")
+    const file = new Blob([template], { type: "text/html" })
+    element.href = URL.createObjectURL(file)
+    element.download = "template.html"
+    document.body.appendChild(element)
+    element.click()
+    document.body.removeChild(element)
+  }
+
   return (
     <main className="container grid 2xl:grid-cols-2 items-center gap-6 pb-8 pt-6 md:py-10">
-      <div className="sm:w-[350px] mx-auto">
+      <div className="sm:w-[350px] flex flex-col items-center gap-4 mx-auto">
         <Select onValueChange={handleSelectChange}>
           <SelectTrigger>
             <SelectValue
@@ -67,6 +81,7 @@ export default function Page(props: Props) {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <Button onClick={downloadTemplate}>Descargar plantilla</Button>
       </div>
       <div dangerouslySetInnerHTML={{ __html: generatedTemplate }} />
     </main>
