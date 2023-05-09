@@ -1,8 +1,7 @@
-"use client";
+"use client"
 
-import { useCallback, useMemo, useRef, useState } from "react";
-
-
+import * as React from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 
 import { footers, headers, rows } from "@/lib/templates"
 import { Button } from "@/components/ui/button"
@@ -14,6 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { DatePicker } from "@/components/date-picker"
+import { NewsCounter } from "@/components/news-counter"
 
 interface FormRef {
   country: HTMLSpanElement | null
@@ -30,6 +31,7 @@ export default function Page(props: Props) {
     country: null,
   })
 
+  const [date, setDate] = useState<Date>()
   const [selectedCountry, setSelectedCountry] =
     useState<State["selectedCountry"]>("")
 
@@ -51,19 +53,37 @@ export default function Page(props: Props) {
     return template
   }, [selectedCountry])
 
-  const downloadTemplate = () => {
+  function downloadTemplate() {
+    const countryLetters = selectedCountry.substring(0, 2).toUpperCase()
+
+    const dateFormatted = date
+      ? date
+          .toLocaleDateString("en-US", {
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric",
+          })
+          .replace(/\//g, "-")
+      : ""
+
+    const filename = `${countryLetters}-${dateFormatted}.html`
+
     const template = generatedTemplate
     const element = document.createElement("a")
     const file = new Blob([template], { type: "text/html" })
     element.href = URL.createObjectURL(file)
-    element.download = "template.html"
+    element.download = filename
     document.body.appendChild(element)
     element.click()
     document.body.removeChild(element)
   }
 
+  function handleCountChange(count:number) {
+    console.log("Count changed to:", count)
+  }
+
   return (
-    <main className="container grid 2xl:grid-cols-2 items-center gap-6 pb-8 pt-6 md:py-10">
+    <main className="container grid items-center gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
       <div className="sm:w-[350px] flex flex-col items-center gap-4 mx-auto">
         <Select onValueChange={handleSelectChange}>
           <SelectTrigger>
@@ -81,7 +101,21 @@ export default function Page(props: Props) {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <Button onClick={downloadTemplate}>Descargar plantilla</Button>
+        <DatePicker date={date} setDate={setDate} />
+        <h2 className="text-lg font-bold">Cantidad de noticias</h2>
+        <div className="flex justify-between w-full">
+          <div>
+            <p className="mb-1">Nacionales</p>
+            <NewsCounter onCountChange={handleCountChange} />
+          </div>
+          <div>
+            <p className="mb-1">América del sur</p>
+            <NewsCounter onCountChange={handleCountChange} />
+          </div>
+        </div>
+        <Button onClick={downloadTemplate} disabled={!selectedCountry || !date}>
+          Descargar plantilla
+        </Button>
       </div>
       <div dangerouslySetInnerHTML={{ __html: generatedTemplate }} />
     </main>
