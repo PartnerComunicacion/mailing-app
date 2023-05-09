@@ -26,7 +26,7 @@ export function NewsCounter({ onCountChange }: NewsCounterProps) {
   return (
     <div className="flex items-center gap-2">
       <Button className="w-auto h-auto p-1 rounded-full" onClick={decrement}>
-        <Minus />
+        <Minus className="w-4 h-4 text-background" />
       </Button>
       <Input
         className="text-center w-11"
@@ -36,7 +36,7 @@ export function NewsCounter({ onCountChange }: NewsCounterProps) {
         readOnly
       />
       <Button className="w-auto h-auto p-1 rounded-full" onClick={increment}>
-        <Plus />
+        <Plus className="w-4 h-4 text-background" />
       </Button>
     </div>
   )

@@ -102,7 +102,7 @@ export default function Page(props: Props) {
           </SelectContent>
         </Select>
         <DatePicker date={date} setDate={setDate} />
-        <h2 className="text-lg font-bold">Cantidad de noticias</h2>
+        <h2 className="text-lg font-bold">Noticias</h2>
         <div className="flex justify-between w-full">
           <div>
             <p className="mb-1">Nacionales</p>
