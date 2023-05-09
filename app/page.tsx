@@ -31,6 +31,8 @@ export default function Page(props: Props) {
     country: null,
   })
 
+  const [nationalCount, setNationalCount] = useState<number>(0);
+const [southAmericaCount, setSouthAmericaCount] = useState<number>(0);
   const [date, setDate] = useState<Date>()
   const [selectedCountry, setSelectedCountry] =
     useState<State["selectedCountry"]>("")
@@ -41,21 +43,39 @@ export default function Page(props: Props) {
   }, [])
 
   const generatedTemplate = useMemo(() => {
+    const totalNews = nationalCount + southAmericaCount;
+    const evenRows = Math.floor(totalNews / 2);
+    const oddRows = Math.ceil((totalNews % 4) / 2);
+  
+    let allRows = "";
+  
+    for (let i = 0; i < evenRows; i++) {
+      allRows += rows.even ;
+    }
+  
+    for (let i = 0; i < oddRows; i++) {
+      allRows += rows.odd ;
+    }
+  
+    if (totalNews % 2 !== 0) {
+      allRows += rows.odd;
+    }
+  
     const template =
       selectedCountry === "Brasil."
-        ? headers.brasil + rows.even + footers.brasil
+        ? headers.brasil + allRows+ footers.brasil
         : selectedCountry === "Perú."
-        ? headers.peru + rows.even + footers.peru
+        ? headers.peru +allRows+ footers.peru
         : selectedCountry === "Colombia."
-        ? headers.colombia + rows.even + footers.colombia
-        : ""
-
-    return template
-  }, [selectedCountry])
-
+        ? headers.colombia +allRows+ footers.colombia
+        : "";
+    
+    return template;
+  }, [selectedCountry, nationalCount, southAmericaCount]);
+  
   function downloadTemplate() {
     const countryLetters = selectedCountry.substring(0, 2).toUpperCase()
-
+  
     const dateFormatted = date
       ? date
           .toLocaleDateString("en-US", {
@@ -65,9 +85,9 @@ export default function Page(props: Props) {
           })
           .replace(/\//g, "-")
       : ""
-
+  
     const filename = `${countryLetters}-${dateFormatted}.html`
-
+  
     const template = generatedTemplate
     const element = document.createElement("a")
     const file = new Blob([template], { type: "text/html" })
@@ -78,13 +98,14 @@ export default function Page(props: Props) {
     document.body.removeChild(element)
   }
 
-  function handleCountChange(count:number) {
+  function handleCountChange(count: number) {
     console.log("Count changed to:", count)
   }
 
+
   return (
-    <main className="container grid items-center gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
-      <div className="sm:w-[350px] flex flex-col items-center gap-4 mx-auto">
+    <main className="container grid items-start gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
+      <div className="sm:w-[350px] flex mx-auto flex-col gap-4">
         <Select onValueChange={handleSelectChange}>
           <SelectTrigger>
             <SelectValue
@@ -106,11 +127,11 @@ export default function Page(props: Props) {
         <div className="flex justify-between w-full">
           <div>
             <p className="mb-1">Nacionales</p>
-            <NewsCounter onCountChange={handleCountChange} />
+            <NewsCounter onCountChange={(count) => setNationalCount(count)} />
           </div>
           <div>
             <p className="mb-1">América del sur</p>
-            <NewsCounter onCountChange={handleCountChange} />
+            <NewsCounter onCountChange={(count) => setSouthAmericaCount(count)} />
           </div>
         </div>
         <Button onClick={downloadTemplate} disabled={!selectedCountry || !date}>
