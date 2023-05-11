@@ -9,7 +9,8 @@ import { footers, headers, rows } from "@/lib/templates";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DatePicker } from "@/components/date-picker";
-import { NewsCounter } from "@/components/news-counter";
+import { News } from "@/components/news"
+import { NewsCounter } from "@/components/news-counter"
 
 
 
@@ -98,41 +99,52 @@ export default function Page(props: Props) {
   }
 
   return (
-    <main className="container grid items-start gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
-      <div className="sm:w-[350px] flex mx-auto flex-col gap-4">
-        <Select onValueChange={handleSelectChange}>
-          <SelectTrigger>
-            <SelectValue
-              id="country"
-              ref={(el) => (formRef.current.country = el as HTMLSpanElement)}
-              placeholder="País del mailing"
-            />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="brasil">Brasil.</SelectItem>
-              <SelectItem value="peru">Perú.</SelectItem>
-              <SelectItem value="colombia">Colombia.</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <DatePicker date={date} setDate={setDate} />
-        <h2 className="text-lg font-bold text-center">Noticias</h2>
-        <div className="flex justify-between w-full">
-          <div>
-            <p className="mb-1">Nacionales</p>
-            <NewsCounter onCountChange={(count) => setNationalCount(count)} />
+    <main className="container grid items-center gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
+      <div className="w-full">
+        <div className="sm:w-[350px] flex mx-auto flex-col gap-4">
+          <Select onValueChange={handleSelectChange}>
+            <SelectTrigger>
+              <SelectValue
+                id="country"
+                ref={(el) => (formRef.current.country = el as HTMLSpanElement)}
+                placeholder="País del mailing"
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="brasil">Brasil.</SelectItem>
+                <SelectItem value="peru">Perú.</SelectItem>
+                <SelectItem value="colombia">Colombia.</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <DatePicker date={date} setDate={setDate} />
+          <h2 className="text-lg font-bold text-center">Noticias</h2>
+          <div className="flex justify-between w-full">
+            <div>
+              <p className="mb-1">Nacionales</p>
+              <NewsCounter onCountChange={(count) => setNationalCount(count)} />
+            </div>
+            <div>
+              <p className="mb-1">América del sur</p>
+              <NewsCounter
+                onCountChange={(count) => setSouthAmericaCount(count)}
+              />
+            </div>
           </div>
-          <div>
-            <p className="mb-1">América del sur</p>
-            <NewsCounter
-              onCountChange={(count) => setSouthAmericaCount(count)}
-            />
-          </div>
+          <Button
+            onClick={downloadTemplate}
+            disabled={!selectedCountry || !date}
+          >
+            Descargar plantilla
+          </Button>
+          <div className="flex flex-col"></div>
         </div>
-        <Button onClick={downloadTemplate} disabled={!selectedCountry || !date}>
-          Descargar plantilla
-        </Button>
+        <div className="grid justify-center w-full gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
+          <News />
+          <News />
+          <News />
+        </div>
       </div>
       <div dangerouslySetInnerHTML={{ __html: generatedTemplate }} />
     </main>
