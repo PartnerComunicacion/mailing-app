@@ -1,9 +1,7 @@
-"use client";
+"use client"
 
-import * as React from "react";
-import { useCallback, useMemo, useRef, useState } from "react";
-
-
+import * as React from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 
 import { footers, headers, rows } from "@/lib/templates"
 import {
@@ -13,6 +11,7 @@ import {
   replaceStringsTwice,
 } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Select,
   SelectContent,
@@ -55,6 +54,7 @@ export default function Page(props: Props) {
   const [date, setDate] = useState<Date>()
   const [selectedCountry, setSelectedCountry] =
     useState<State["selectedCountry"]>("")
+  const [banner, setBanner] = useState(false)
   const [nationalNewsTitles, setNationalNewsTitles] = useState<string[]>([])
   const [nationalNewsLinks, setNationalNewsLinks] = useState<string[]>([])
   const [nationalNewsCallToAction, setNationalNewsCallToAction] = useState<
@@ -143,10 +143,19 @@ export default function Page(props: Props) {
       3
     )
 
-    console.log(newTemplate)
+    // console.log(banner)
 
-    return (header || "") + newTemplate + (footer || "")
-  }, [selectedCountry, nationalCount, southAmericaCount, replacedTitles, date])
+    return (
+      (header || "") + newTemplate + (banner ? "banner" : "") + (footer || "")
+    )
+  }, [
+    selectedCountry,
+    nationalCount,
+    southAmericaCount,
+    replacedTitles,
+    date,
+    banner,
+  ])
 
   const regionalNews = useMemo(() => {
     const newsArray = Array.from(Array(southAmericaCount), (_, index) => (
@@ -270,6 +279,15 @@ export default function Page(props: Props) {
             </SelectContent>
           </Select>
           <DatePicker date={date} setDate={setDate} />
+          <div className="flex items-center space-x-2">
+            <Checkbox onClick={() => setBanner(!banner)} id="banner" />
+            <label
+              htmlFor="banner"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Selecciona si tiene banner
+            </label>
+          </div>
           <h2 className="text-lg font-bold text-center">Noticias</h2>
           <div className="flex justify-between w-full">
             <div>
@@ -283,17 +301,22 @@ export default function Page(props: Props) {
               />
             </div>
           </div>
-          <Button onClick={() => replaceTittles()}>Guardar datos</Button>
+        </div>
+        <div className="grid justify-center w-full gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
+          {nationalNews}
+          {regionalNews}
+        </div>
+        <div className="w-full flex gap-3">
+          <Button className="w-1/2" onClick={() => replaceTittles()}>
+            Guardar noticias
+          </Button>
           <Button
+            className="w-1/2"
             onClick={downloadTemplate}
             disabled={!selectedCountry || !date}
           >
             Descargar plantilla
           </Button>
-        </div>
-        <div className="grid justify-center w-full gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
-          {nationalNews}
-          {regionalNews}
         </div>
       </div>
       <div dangerouslySetInnerHTML={{ __html: generatedTemplate }} />
