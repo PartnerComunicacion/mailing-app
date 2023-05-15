@@ -1217,7 +1217,7 @@ export const rows = {
                                                       line-height: 100%;
                                                       text-align: left;
                                                       margin-top: 0;
-                                                      margin-bottom: 0;
+                                                      margin-bottom: Espaciopx;
                                                   "
                                               >
                                                   Título
@@ -1311,7 +1311,7 @@ export const rows = {
                                                       line-height: 100%;
                                                       text-align: left;
                                                       margin-top: 0;
-                                                      margin-bottom: 0;
+                                                      margin-bottom: Espaciopx;
                                                   "
                                               >
                                                   Título
@@ -1514,3 +1514,69 @@ export const rows = {
   </table>
   `,
 }
+
+export const banner = `<!-- Banner -->
+<table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt" width="100%">
+	<tbody>
+		<tr>
+			<td>
+				<table
+					align="center"
+					border="0"
+					cellpadding="0"
+					cellspacing="0"
+					class="row-content stack"
+					role="presentation"
+					style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f2f2f2; color: #000000; width: 650px"
+					width="650"
+				>
+					<tbody>
+						<tr>
+							<td
+								class="column column-1"
+								style="
+									mso-table-lspace: 0pt;
+									mso-table-rspace: 0pt;
+									font-weight: 400;
+									text-align: left;
+									vertical-align: top;
+									border-bottom: 5px solid #6cb33e;
+									padding-top: 0px;
+									padding-bottom: 20px;
+									border-right: 0px;
+									border-top: 0px;
+									border-left: 0px;
+								"
+								width="100%"
+							>
+								<table border="0" cellpadding="0" cellspacing="0" class="image_block" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt" width="100%">
+									<tr>
+										<td style="width: 100%; padding-right: 0px; padding-left: 0px">
+											<div align="center" style="line-height: 10px">
+												<a
+													href="Link"
+													style="outline: none"
+													tabindex="-1"
+													target="_blank"
+													><img
+														alt="Anuncio"
+														class="big"
+														src="https://insidenews.com.co/wp-content/uploads/Mailing/País/Nueva Fecha/Banner.png"
+														style="display: block; border: 0; width: 590px; height: 76px; max-width: 100%"
+														title="Anuncio"
+														width="590"
+														height="76"
+												/></a>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+`

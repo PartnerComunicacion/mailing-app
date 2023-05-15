@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import { useCallback, useMemo, useRef, useState } from "react"
 
-import { footers, headers, rows } from "@/lib/templates"
+import { banner, footers, headers, rows } from "@/lib/templates"
 import {
   replaceAll,
   replaceStrings,
@@ -12,6 +12,7 @@ import {
 } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -54,21 +55,25 @@ export default function Page(props: Props) {
   const [date, setDate] = useState<Date>()
   const [selectedCountry, setSelectedCountry] =
     useState<State["selectedCountry"]>("")
-  const [banner, setBanner] = useState(false)
+  const [hasBanner, sethasBanner] = useState(false)
   const [nationalNewsTitles, setNationalNewsTitles] = useState<string[]>([])
   const [nationalNewsLinks, setNationalNewsLinks] = useState<string[]>([])
+  const [nationalNewsPadding, setNationalNewsPadding] = useState<string[]>([])
   const [nationalNewsCallToAction, setNationalNewsCallToAction] = useState<
     string[]
   >([])
   const [regionalNewsTitles, setRegionalNewsTitles] = useState<string[]>([])
   const [regionalNewsLinks, setRegionalNewsLinks] = useState<string[]>([])
+  const [regionalNewsPadding, setRegionalNewsPadding] = useState<string[]>([])
   const [regionalNewsCallToAction, setRegionalCallToAction] = useState<
     string[]
   >([])
 
   const [replacedTitles, setReplacedTitles] = useState<string[]>([])
   const [replacedLinks, setReplacedLinks] = useState<string[]>([])
+  const [replacedPadding, setReplacedPadding] = useState<string[]>([])
   const [replacedCallToAction, setReplacedCallToAction] = useState<string[]>([])
+  const [bannerLink, setBannerLink] = useState("")
 
   const handleSelectChange = useCallback(() => {
     const value = formRef.current.country?.innerText
@@ -94,6 +99,7 @@ export default function Page(props: Props) {
     const { header, footer } = headersAndFooters[selectedCountry] || {}
 
     let newTemplate = replaceStringsOnce("Título", allRows, replacedTitles)
+    newTemplate = replaceStringsOnce("Espacio", newTemplate, replacedPadding)
     newTemplate = replaceStrings("Link", newTemplate, replacedLinks, 2)
     newTemplate = replaceStringsOnce(
       "Texto Botón",
@@ -143,10 +149,35 @@ export default function Page(props: Props) {
       3
     )
 
-    // console.log(banner)
+    // console.log(newTemplate)
+
+    let newBanner = replaceAll(
+      "País",
+      banner,
+      selectedCountry === "Brasil" ? "BR" : "RA"
+    )
+    newBanner = replaceAll(
+      "Nueva Fecha",
+      newBanner,
+      date
+        ? date
+            .toLocaleDateString("en-US", {
+              month: "2-digit",
+              day: "2-digit",
+              year: "numeric",
+            })
+            .replace(/\//g, "-")
+        : ""
+    )
+    newBanner = replaceAll("Link", newBanner, bannerLink)
+
+    // console.log(newBanner)
 
     return (
-      (header || "") + newTemplate + (banner ? "banner" : "") + (footer || "")
+      (header || "") +
+      newTemplate +
+      (hasBanner ? newBanner : "") +
+      (footer || "")
     )
   }, [
     selectedCountry,
@@ -154,7 +185,7 @@ export default function Page(props: Props) {
     southAmericaCount,
     replacedTitles,
     date,
-    banner,
+    hasBanner,
   ])
 
   const regionalNews = useMemo(() => {
@@ -175,6 +206,13 @@ export default function Page(props: Props) {
             const newLinks = [...prevLinks]
             newLinks[index] = link
             return newLinks
+          })
+        }
+        onPaddingChange={(padding) =>
+          setRegionalNewsPadding((prevPadding) => {
+            const newPadding = [...prevPadding]
+            newPadding[index] = padding
+            return newPadding
           })
         }
         onCallToActionChange={(callToAction) =>
@@ -207,6 +245,13 @@ export default function Page(props: Props) {
             const newLinks = [...prevLinks]
             newLinks[index] = link
             return newLinks
+          })
+        }
+        onPaddingChange={(padding) =>
+          setNationalNewsPadding((prevPadding) => {
+            const newPadding = [...prevPadding]
+            newPadding[index] = padding
+            return newPadding
           })
         }
         onCallToActionChange={(callToAction) =>
@@ -255,6 +300,7 @@ export default function Page(props: Props) {
 
     setReplacedTitles(allNewsTitles)
     setReplacedLinks(allNewsLinks)
+    setReplacedPadding(nationalNewsPadding.concat(regionalNewsPadding))
     setReplacedCallToAction(allNewsCallToAction)
   }
 
@@ -280,7 +326,7 @@ export default function Page(props: Props) {
           </Select>
           <DatePicker date={date} setDate={setDate} />
           <div className="flex items-center space-x-2">
-            <Checkbox onClick={() => setBanner(!banner)} id="banner" />
+            <Checkbox onClick={() => sethasBanner(!hasBanner)} id="banner" />
             <label
               htmlFor="banner"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -288,6 +334,15 @@ export default function Page(props: Props) {
               Selecciona si tiene banner
             </label>
           </div>
+          {hasBanner && (
+            <Input
+              className="w-full"
+              type="text"
+              placeholder="Ingresa el link del banner"
+              value={bannerLink}
+              onChange={(e) => setBannerLink(e.target.value)}
+            />
+          )}
           <h2 className="text-lg font-bold text-center">Noticias</h2>
           <div className="flex justify-between w-full">
             <div>
@@ -306,7 +361,7 @@ export default function Page(props: Props) {
           {nationalNews}
           {regionalNews}
         </div>
-        <div className="w-full flex gap-3">
+        <div className="flex w-full gap-3">
           <Button className="w-1/2" onClick={() => replaceTittles()}>
             Guardar noticias
           </Button>
