@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import * as React from "react";
+import * as React from "react"
 import { useCallback, useMemo, useRef, useState } from "react"
 
 import { banner, footers, headers, rows } from "@/lib/templates"
@@ -37,41 +37,36 @@ interface State {
   selectedCountry: string
 }
 
-interface Props {}
-
 const headersAndFooters: HeadersAndFooters = {
   Brasil: { header: headers.brasil, footer: footers.brasil },
   Perú: { header: headers.peru, footer: footers.peru },
   Colombia: { header: headers.colombia, footer: footers.colombia },
 }
 
-export default function Page(props: Props) {
+export default function Page() {
   const formRef = useRef<FormRef>({
     country: null,
   })
 
   const [nationalCount, setNationalCount] = useState(0)
-  const [southAmericaCount, setSouthAmericaCount] = useState(0)
+  const [regionalCount, setRegionalCount] = useState(0)
   const [date, setDate] = useState<Date>()
   const [selectedCountry, setSelectedCountry] =
     useState<State["selectedCountry"]>("")
-  const [hasBanner, sethasBanner] = useState(false)
+  const [hasBanner, setHasBanner] = useState(false)
   const [nationalNewsTitles, setNationalNewsTitles] = useState<string[]>([])
   const [nationalNewsLinks, setNationalNewsLinks] = useState<string[]>([])
-  const [nationalNewsPadding, setNationalNewsPadding] = useState<string[]>([])
   const [nationalNewsCallToAction, setNationalNewsCallToAction] = useState<
     string[]
   >([])
   const [regionalNewsTitles, setRegionalNewsTitles] = useState<string[]>([])
   const [regionalNewsLinks, setRegionalNewsLinks] = useState<string[]>([])
-  const [regionalNewsPadding, setRegionalNewsPadding] = useState<string[]>([])
   const [regionalNewsCallToAction, setRegionalCallToAction] = useState<
     string[]
   >([])
 
   const [replacedTitles, setReplacedTitles] = useState<string[]>([])
   const [replacedLinks, setReplacedLinks] = useState<string[]>([])
-  const [replacedPadding, setReplacedPadding] = useState<string[]>([])
   const [replacedCallToAction, setReplacedCallToAction] = useState<string[]>([])
   const [bannerLink, setBannerLink] = useState("")
 
@@ -81,7 +76,7 @@ export default function Page(props: Props) {
   }, [])
 
   const generatedTemplate = useMemo(() => {
-    const totalNews = nationalCount + southAmericaCount
+    const totalNews = nationalCount + regionalCount
     let allRows = ""
 
     if (totalNews === 1) {
@@ -99,8 +94,8 @@ export default function Page(props: Props) {
     const { header, footer } = headersAndFooters[selectedCountry] || {}
 
     let newTemplate = replaceStringsOnce("Título", allRows, replacedTitles)
-    newTemplate = replaceStringsOnce("Espacio", newTemplate, replacedPadding)
-    newTemplate = replaceStrings("Link", newTemplate, replacedLinks, 2)
+    // newTemplate = doubleReplace("Link", newTemplate, replacedLinks)
+    newTemplate = replaceStringsTwice("Link", newTemplate, replacedLinks)
     newTemplate = replaceStringsOnce(
       "Texto Botón",
       newTemplate,
@@ -139,7 +134,7 @@ export default function Page(props: Props) {
 
     const regionalNewsArray: string[] = []
 
-    for (let i = 1; i <= southAmericaCount; i++) {
+    for (let i = 1; i <= regionalCount; i++) {
       regionalNewsArray.push(`ASNews${i}`)
     }
     newTemplate = replaceStrings(
@@ -182,14 +177,14 @@ export default function Page(props: Props) {
   }, [
     selectedCountry,
     nationalCount,
-    southAmericaCount,
+    regionalCount,
     replacedTitles,
     date,
     hasBanner,
   ])
 
   const regionalNews = useMemo(() => {
-    const newsArray = Array.from(Array(southAmericaCount), (_, index) => (
+    const newsArray = Array.from(Array(regionalCount), (_, index) => (
       <News
         key={Math.floor(Math.random() * 1000) + 1}
         number={index}
@@ -208,13 +203,6 @@ export default function Page(props: Props) {
             return newLinks
           })
         }
-        onPaddingChange={(padding) =>
-          setRegionalNewsPadding((prevPadding) => {
-            const newPadding = [...prevPadding]
-            newPadding[index] = padding
-            return newPadding
-          })
-        }
         onCallToActionChange={(callToAction) =>
           setRegionalCallToAction((prevCallToAction) => {
             const newCallToAction = [...prevCallToAction]
@@ -225,7 +213,7 @@ export default function Page(props: Props) {
       />
     ))
     return newsArray
-  }, [southAmericaCount])
+  }, [regionalCount])
 
   const nationalNews = useMemo(() => {
     const newsArray = Array.from(Array(nationalCount), (_, index) => (
@@ -245,13 +233,6 @@ export default function Page(props: Props) {
             const newLinks = [...prevLinks]
             newLinks[index] = link
             return newLinks
-          })
-        }
-        onPaddingChange={(padding) =>
-          setNationalNewsPadding((prevPadding) => {
-            const newPadding = [...prevPadding]
-            newPadding[index] = padding
-            return newPadding
           })
         }
         onCallToActionChange={(callToAction) =>
@@ -300,7 +281,6 @@ export default function Page(props: Props) {
 
     setReplacedTitles(allNewsTitles)
     setReplacedLinks(allNewsLinks)
-    setReplacedPadding(nationalNewsPadding.concat(regionalNewsPadding))
     setReplacedCallToAction(allNewsCallToAction)
   }
 
@@ -326,7 +306,7 @@ export default function Page(props: Props) {
           </Select>
           <DatePicker date={date} setDate={setDate} />
           <div className="flex items-center space-x-2">
-            <Checkbox onClick={() => sethasBanner(!hasBanner)} id="banner" />
+            <Checkbox onClick={() => setHasBanner(!hasBanner)} id="banner" />
             <label
               htmlFor="banner"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -351,9 +331,7 @@ export default function Page(props: Props) {
             </div>
             <div>
               <p className="mb-1">América del sur</p>
-              <NewsCounter
-                onCountChange={(count) => setSouthAmericaCount(count)}
-              />
+              <NewsCounter onCountChange={(count) => setRegionalCount(count)} />
             </div>
           </div>
         </div>
@@ -368,7 +346,13 @@ export default function Page(props: Props) {
           <Button
             className="w-1/2"
             onClick={downloadTemplate}
-            disabled={!selectedCountry || !date}
+            disabled={
+              !selectedCountry ||
+              !date ||
+              replacedTitles.length < nationalCount + regionalCount ||
+              replacedLinks.length < nationalCount + regionalCount ||
+              replacedCallToAction.length < nationalCount + regionalCount
+            }
           >
             Descargar plantilla
           </Button>

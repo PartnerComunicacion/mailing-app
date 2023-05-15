@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: "Inside News Maling App",
+  name: "Inside News",
   description: "Aplicación para generar las noticias de Ingredion",
   mainNav: [
     {

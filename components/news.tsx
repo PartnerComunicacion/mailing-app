@@ -1,14 +1,14 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react"
 
-
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-
-
-
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface FormRef {
   buttonText: HTMLSpanElement | null
@@ -19,7 +19,6 @@ interface News {
   type: string
   onTitleChange: (title: string) => void
   onLinkChange: (link: string) => void
-  onPaddingChange: (padding: string) => void
   onCallToActionChange: (callToAction: string) => void
 }
 
@@ -28,7 +27,6 @@ export function News({
   number,
   onTitleChange,
   onLinkChange,
-  onPaddingChange,
   onCallToActionChange,
 }: News) {
   const formRef = useRef<FormRef>({
@@ -36,10 +34,8 @@ export function News({
   })
   const [newsTitle, setNewsTitle] = useState("")
   const [newsLink, setNewsLink] = useState("")
-  const [newsPadding, setNewsPadding] = useState("0")
 
   const handleSelectChange = useCallback(() => {
-    // console.log(formRef.current.buttonText?.innerText)
     onCallToActionChange(formRef.current.buttonText?.innerText || "")
   }, [])
 
@@ -68,20 +64,6 @@ export function News({
           onTitleChange(e.target.value)
         }} // actualizar el valor del título al cambiar
       />
-      <div className="flex items-center justify-between w-full space-x-2">
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          Padding del título
-        </label>
-        <Input
-          className="w-20"
-          type="number"
-          value={newsPadding} // agregar el valor del título
-          onChange={(e) => {
-            setNewsPadding(e.target.value)
-            onPaddingChange(e.target.value)
-          }} // actualizar el valor del título al cambiar
-        />
-      </div>
 
       <Select onValueChange={handleSelectChange}>
         <SelectTrigger>
@@ -95,6 +77,8 @@ export function News({
           <SelectGroup>
             <SelectItem value="Ver aquí">Ver aquí</SelectItem>
             <SelectItem value="Conoce más">Conoce más</SelectItem>
+            <SelectItem value="Ver aquí">Saiba mais</SelectItem>
+            <SelectItem value="Conoce más">Conheça mais</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
