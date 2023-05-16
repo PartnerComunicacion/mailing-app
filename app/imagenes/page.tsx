@@ -2,9 +2,9 @@
 
 import * as React from "react"
 import { useCallback, useMemo, useRef, useState } from "react"
-import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -22,7 +22,8 @@ export default function Page() {
   const formRef = useRef<FormRef>({
     editorial: null,
   })
-  const [selectedImage, setSelectedImage] = useState("")
+  const [selectedImage, setSelectedImage] = useState("mirada-en-el-cliente")
+  const [pickedImage, setPickedImage] = useState<string | undefined>("")
 
   const handleSelectChange = useCallback(() => {
     const value = formRef.current.editorial?.innerText
@@ -42,7 +43,7 @@ export default function Page() {
 
   return (
     <main className="container flex items-center justify-center h-screen">
-      <div className="w-[285px]">
+      <div className="w-[285px] flex flex-col gap-4">
         <Select onValueChange={handleSelectChange}>
           <SelectTrigger>
             <SelectValue
@@ -67,16 +68,32 @@ export default function Page() {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <div className="w-[285px] h-[214px] border border-1 border-black mt-4">
+        <div className="w-[285px] h-[214px] border border-1 border-black relative">
+          <img
+            src={pickedImage}
+            className="z-10 object-contain max-w-full max-h-full"
+          />
           <img
             src={`/${selectedImage}.png`}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              objectFit: "contain",
-            }}
+            className="absolute top-0 left-0 z-20 object-contain max-w-full max-h-full"
           />
         </div>
+        <Input
+          type="file"
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              const file = e.target.files[0]
+              const reader = new FileReader()
+              reader.onloadend = () => {
+                setPickedImage(reader.result?.toString())
+              }
+              reader.readAsDataURL(file)
+            } else {
+              setPickedImage("")
+            }
+          }}
+          accept="image/*"
+        />
       </div>
     </main>
   )
