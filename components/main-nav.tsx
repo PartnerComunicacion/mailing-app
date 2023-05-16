@@ -1,19 +1,13 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation"
 
-import { NavItem } from "@/types/nav"
 import { siteConfig } from "@/config/site"
-import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-interface MainNavProps {
-  items?: NavItem[]
-}
-
-export function MainNav({ items }: MainNavProps) {
+export function MainNav() {
   const pathname = usePathname()
 
   return (
@@ -28,28 +22,6 @@ export function MainNav({ items }: MainNavProps) {
           {siteConfig.name}
         </span>
       </Link>
-      <nav className="flex items-center space-x-6 text-sm font-medium">
-        <Link
-          href="/"
-          className={cn(
-            "transition-colors hover:text-foreground/80",
-            pathname === "/" ? "text-foreground" : "text-foreground/60"
-          )}
-        >
-          Mailing
-        </Link>
-        <Link
-          href="/imagenes"
-          className={cn(
-            "transition-colors hover:text-foreground/80",
-            pathname?.startsWith("/imagenes")
-              ? "text-foreground"
-              : "text-foreground/60"
-          )}
-        >
-          Imágenes
-        </Link>
-      </nav>
     </div>
   )
 }
