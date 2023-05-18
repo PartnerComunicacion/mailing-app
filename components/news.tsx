@@ -77,8 +77,8 @@ export function News({
           <SelectGroup>
             <SelectItem value="Ver aquí">Ver aquí</SelectItem>
             <SelectItem value="Conoce más">Conoce más</SelectItem>
-            <SelectItem value="Ver aquí">Saiba mais</SelectItem>
-            <SelectItem value="Conoce más">Conheça mais</SelectItem>
+            <SelectItem value="Saiba mais">Saiba mais</SelectItem>
+            <SelectItem value="Conheça mais">Conheça mais</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
