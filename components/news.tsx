@@ -47,16 +47,6 @@ export function News({
       <Input
         className="w-full"
         type="text"
-        placeholder="Ingresa el link de la noticia"
-        value={newsLink}
-        onChange={(e) => {
-          setNewsLink(e.target.value)
-          onLinkChange(e.target.value) // llamar a la función del padre con el nuevo valor del link
-        }}
-      />
-      <Input
-        className="w-full"
-        type="text"
         placeholder="Ingresa el título de la noticia"
         value={newsTitle} // agregar el valor del título
         onChange={(e) => {
@@ -64,7 +54,16 @@ export function News({
           onTitleChange(e.target.value)
         }} // actualizar el valor del título al cambiar
       />
-
+      <Input
+        className="w-full"
+        type="text"
+        placeholder="Ingresa el link de la noticia"
+        value={newsLink}
+        onChange={(e) => {
+          setNewsLink(e.target.value)
+          onLinkChange(e.target.value) // llamar a la función del padre con el nuevo valor del link
+        }}
+      />
       <Select onValueChange={handleSelectChange}>
         <SelectTrigger>
           <SelectValue
