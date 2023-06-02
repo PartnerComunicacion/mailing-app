@@ -285,9 +285,9 @@ export default function Page() {
   }
 
   return (
-    <main className="container flex flex-col items-center justify-center gap-6 pt-6 pb-8 2xl:flex-row md:py-10">
-      <div className="w-full md:w-fit">
-        <div className="flex flex-col gap-4 mx-auto">
+    <main className="container flex flex-col items-center justify-center gap-6 pt-6 pb-8 2xl:items-start 2xl:flex-row md:py-10">
+      <div className="w-[620px]">
+        <div className="flex flex-col gap-2 mx-auto">
           <div className="flex gap-2">
             <Select onValueChange={handleSelectChange}>
               <SelectTrigger>
@@ -342,7 +342,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className="grid justify-center w-full grid-cols-2 gap-6 pt-6 pb-8 md:py-10">
+        <div className="grid justify-center w-full grid-cols-2 gap-2 pt-6 pb-8 md:py-10">
           {nationalNews}
           {regionalNews}
         </div>
