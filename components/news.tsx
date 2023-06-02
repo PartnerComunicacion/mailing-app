@@ -40,7 +40,7 @@ export function News({
   }, [])
 
   return (
-    <div className="flex 2xl:w-[250px] w-[350px] flex-col items-center gap-2">
+    <div className="flex w-[312px] flex-col items-center gap-2">
       <p className="font-bold">
         Noticia {type} {number + 1}
       </p>

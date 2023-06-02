@@ -285,26 +285,30 @@ export default function Page() {
   }
 
   return (
-    <main className="container items-start justify-around gap-6 pt-6 pb-8 md:flex md:py-10">
+    <main className="container flex flex-col items-center justify-center gap-6 pt-6 pb-8 2xl:flex-row md:py-10">
       <div className="w-full md:w-fit">
-        <div className="sm:w-[350px] flex mx-auto flex-col gap-4">
-          <Select onValueChange={handleSelectChange}>
-            <SelectTrigger>
-              <SelectValue
-                id="country"
-                ref={(el) => (formRef.current.country = el as HTMLSpanElement)}
-                placeholder="País del mailing"
-              />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="brasil">Brasil.</SelectItem>
-                <SelectItem value="peru">Perú.</SelectItem>
-                <SelectItem value="colombia">Colombia.</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <DatePicker date={date} setDate={setDate} />
+        <div className="flex flex-col gap-4 mx-auto">
+          <div className="flex gap-2">
+            <Select onValueChange={handleSelectChange}>
+              <SelectTrigger>
+                <SelectValue
+                  id="country"
+                  ref={(el) =>
+                    (formRef.current.country = el as HTMLSpanElement)
+                  }
+                  placeholder="País del mailing"
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="brasil">Brasil.</SelectItem>
+                  <SelectItem value="peru">Perú.</SelectItem>
+                  <SelectItem value="colombia">Colombia.</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <DatePicker date={date} setDate={setDate} />
+          </div>
           <div className="flex items-center space-x-2">
             <Checkbox onClick={() => setHasBanner(!hasBanner)} id="banner" />
             <label
@@ -323,19 +327,22 @@ export default function Page() {
               onChange={(e) => setBannerLink(e.target.value)}
             />
           )}
-          <h2 className="text-lg font-bold text-center">Noticias</h2>
-          <div className="flex justify-between w-full">
-            <div>
-              <p className="mb-1">Nacionales</p>
+          <div className="flex flex-col justify-between w-full gap-4">
+            <div className="flex gap-4">
+              <p className="my-auto text-lg font-bold">
+                Cantidad de noticias nacionales:
+              </p>
               <NewsCounter onCountChange={(count) => setNationalCount(count)} />
             </div>
-            <div>
-              <p className="mb-1">América del sur</p>
+            <div className="flex gap-4">
+              <p className="my-auto text-lg font-bold">
+                Cantidad de noticias de América del sur:
+              </p>
               <NewsCounter onCountChange={(count) => setRegionalCount(count)} />
             </div>
           </div>
         </div>
-        <div className="grid justify-center w-full gap-6 pt-6 pb-8 2xl:grid-cols-2 md:py-10">
+        <div className="grid justify-center w-full grid-cols-2 gap-6 pt-6 pb-8 md:py-10">
           {nationalNews}
           {regionalNews}
         </div>
