@@ -4,6 +4,11 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  output: "export",
+  images: {
+    unoptimized: true,
+  },
+  trailingSlash: true,
 }
 
 export default nextConfig
